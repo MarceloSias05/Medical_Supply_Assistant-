@@ -11,6 +11,7 @@ module.exports = {
     extensions: ['.web.js', '.js', '.jsx', '.ts', '.tsx'],
     alias: {
       'react-native$': 'react-native-web',
+      'react-native-vector-icons': 'react-native-vector-icons/dist',
     },
   },
   module: {
@@ -20,14 +21,19 @@ module.exports = {
         exclude: /node_modules/,
         use: {
           loader: 'babel-loader',
-          options: {
-            presets: ['@babel/preset-env', '@babel/preset-react', '@babel/preset-typescript'],
-          },
         },
       },
       {
-        test: /\.(png|jpe?g|gif|svg)$/, // Loader para imágenes
-        type: 'asset/resource',
+        test: /\.(woff|woff2|eot|ttf|otf)$/,
+        use: [
+          {
+            loader: 'file-loader',
+            options: {
+              name: '[name].[ext]',
+              outputPath: 'fonts/',
+            },
+          },
+        ],
       },
     ],
   },

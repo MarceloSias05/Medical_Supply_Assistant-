@@ -1,35 +1,59 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, Button, StyleSheet, Alert } from 'react-native';
+import { View, Text, TextInput, TouchableOpacity, StyleSheet } from 'react-native';
+import { NativeStackScreenProps } from '@react-navigation/native-stack';
+import { RootStackParamList } from '../../navigation/AppNavigator';
 
-const LoginScreen = (): React.JSX.Element => {
+type LoginScreenProps = NativeStackScreenProps<RootStackParamList, 'Login'>;
+
+const LoginScreen = ({ route }: LoginScreenProps): React.JSX.Element => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
+  const { onAuthentication } = route.params;
 
   const handleLogin = () => {
-    if (username === 'admin' && password === '1234') {
-      Alert.alert('Login exitoso', '¡Bienvenido a SupplyCare!');
-    } else {
-      Alert.alert('Error', 'Usuario o contraseña incorrectos');
+    // Aquí iría la lógica real de autenticación
+    // Por ahora, simularemos diferentes roles basados en el nombre de usuario
+    if (username && password) {
+      switch(username) {
+        case 'admin':
+          onAuthentication?.(true, 'admin');
+          break;
+        case 'doctor':
+          onAuthentication?.(true, 'doctor');
+          break;
+        case 'pharmacy':
+          onAuthentication?.(true, 'pharmacy');
+          break;
+        default:
+          // Mostrar error de credenciales inválidas
+          break;
+      }
     }
   };
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Iniciar Sesión</Text>
+      <Text style={styles.title}>SupplyCare</Text>
       <TextInput
         style={styles.input}
         placeholder="Usuario"
         value={username}
         onChangeText={setUsername}
+        autoCapitalize="none"
       />
       <TextInput
         style={styles.input}
         placeholder="Contraseña"
-        secureTextEntry
         value={password}
         onChangeText={setPassword}
+        secureTextEntry
       />
-      <Button title="Ingresar" onPress={handleLogin} />
+      <TouchableOpacity 
+        style={styles.button}
+        onPress={handleLogin}
+      >
+        <Text style={styles.buttonText}>Iniciar Sesión</Text>
+      </TouchableOpacity>
     </View>
   );
 };
@@ -39,22 +63,37 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: '#ffffff',
-    padding: 16,
+    padding: 20,
+    backgroundColor: '#f5f5f5',
   },
   title: {
-    fontSize: 24,
+    fontSize: 32,
     fontWeight: 'bold',
-    marginBottom: 24,
+    marginBottom: 40,
+    color: '#2c3e50',
   },
   input: {
-    width: '80%',
-    height: 40,
-    borderColor: '#cccccc',
-    borderWidth: 1,
-    borderRadius: 5,
+    width: '100%',
+    height: 50,
+    backgroundColor: 'white',
+    borderRadius: 8,
+    paddingHorizontal: 16,
     marginBottom: 16,
-    paddingHorizontal: 8,
+    borderWidth: 1,
+    borderColor: '#ddd',
+  },
+  button: {
+    width: '100%',
+    height: 50,
+    backgroundColor: '#3498db',
+    borderRadius: 8,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  buttonText: {
+    color: 'white',
+    fontSize: 16,
+    fontWeight: 'bold',
   },
 });
 
